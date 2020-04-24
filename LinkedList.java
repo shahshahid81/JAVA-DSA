@@ -2,7 +2,7 @@ class LinkedListNode {
     int data;
     LinkedListNode next;
 
-    LinkedListNode(final int data) {
+    LinkedListNode(int data) {
         this.data = data;
         this.next = null;
     }
@@ -105,6 +105,7 @@ class LinkedList {
         traverseList();
         System.out.println("\nDeleting last node:");
         deleteLastNode();
+        traverseList();
         System.out.println("\nDeleting 3:");
         deleteNode(3);
         traverseList();
