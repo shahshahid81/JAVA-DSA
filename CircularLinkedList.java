@@ -100,11 +100,11 @@ class CircularLinkedList {
 
   static void deleteNode(int data) {
     CircularLinkedListNode temp = head, prev = head;
-    while (temp != null && temp.data != data) {
+    while (temp != head && temp.data != data) {
       prev = temp;
       temp = temp.next;
     }
-    if (temp == null) {
+    if (temp == head) {
       return;
     }
     prev.next = temp.next;
@@ -128,6 +128,9 @@ class CircularLinkedList {
     traverseList();
     System.out.println("\nDeleting 3:");
     deleteNode(3);
+    traverseList();
+    System.out.println("\nDeleting 1:");
+    deleteNode(1);
     traverseList();
   }
 }

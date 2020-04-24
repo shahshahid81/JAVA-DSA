@@ -103,7 +103,7 @@ class CircularDoublyLinkedList {
     while (temp.next != head && temp.data != data) {
       temp = temp.next;
     }
-    if (temp == head) {
+    if (temp.next == head) {
       return;
     }
     temp.prev.next = temp.next;
@@ -128,6 +128,9 @@ class CircularDoublyLinkedList {
     traverseList();
     System.out.println("\nDeleting 3:");
     deleteNode(3);
+    traverseList();
+    System.out.println("\nDeleting 1:");
+    deleteNode(1);
     traverseList();
   }
 }
