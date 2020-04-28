@@ -13,37 +13,42 @@ class BinarySearchTreeNode {
 public class BinarySearchTree {
   static BinarySearchTreeNode root = null;
 
-  static void insert(int data) {
-    BinarySearchTreeNode node = new BinarySearchTreeNode(data);
+  static BinarySearchTreeNode insert(BinarySearchTreeNode root, int data) {
     if (root == null) {
-      root = node;
+      return new BinarySearchTreeNode(data);
+    } else if (root.data > data) {
+      root.left = insert(root.left, data);
     } else {
-      BinarySearchTreeNode current = root;
-      while (current != null) {
-        if (current.data == data) {
-          System.out.println("No Duplicate Values Allowed");
-          break;
-        } else if (current.data > data) {
-          if (current.left != null) {
-            current = current.left;
-          } else {
-            current.left = node;
-            break;
-          }
-        } else if (current.data < data) {
-          if (current.right != null) {
-            current = current.right;
-          } else {
-            current.right = node;
-            break;
-          }
-        }
-      }
+      root.right = insert(root.right, data);
     }
+    return root;
   }
 
-  static void delete(BinarySearchTreeNode root, int data) {
+  static void insert(int data) {
+    root = insert(root, data);
+  }
 
+  static BinarySearchTreeNode delete(BinarySearchTreeNode root, int data) {
+    if (root == null) {
+      return root;
+    } else if (root.data > data) {
+      root.left = delete(root.left, data);
+    } else if (root.data < data) {
+      root.right = delete(root.right, data);
+    } else {
+      if (root.left == null) {
+        return root.right;
+      } else if (root.right == null) {
+        return root.left;
+      }
+      root.data = smallestElement(root.right);
+      root.right = delete(root.right, root.data);
+    }
+    return root;
+  }
+
+  static void delete(int data) {
+    root = delete(root, data);
   }
 
   static void inOrder(BinarySearchTreeNode root) {
@@ -100,13 +105,20 @@ public class BinarySearchTree {
     }
   }
 
+  static int totalNumberOfNodes(BinarySearchTreeNode root) {
+    if (root == null) {
+      return 0;
+    }
+    return 1 + totalNumberOfNodes(root.left) + totalNumberOfNodes(root.right);
+  }
+
   public static void main(String[] args) {
     insert(25);
     System.out.println("\nElements are: ");
     inOrder(root);
-    // delete(root, 25);
-    // System.out.println("\nElements are: ");
-    // inOrder(root);
+    delete(root, 25);
+    System.out.println("\nElements are: ");
+    inOrder(root);
     insert(25);
     System.out.println("\nElements are: ");
     inOrder(root);
@@ -128,9 +140,9 @@ public class BinarySearchTree {
     insert(3);
     System.out.println("\nElements are: ");
     inOrder(root);
-    // delete(root, 4);
-    // System.out.println("\nElements after delete 4 are: ");
-    // inOrder(root);
+    delete(root, 4);
+    System.out.println("\nElements after delete 4 are: ");
+    inOrder(root);
     System.out.println();
     System.out.println("\nPreOrder: ");
     preOrder(root);
@@ -140,5 +152,6 @@ public class BinarySearchTree {
     System.out.println("\nSmallest Element is " + smallestElement(root));
     System.out.println("\nLargest Element is " + largestElement(root));
     System.out.println("\nTree height is " + heightOfTree(root));
+    System.out.println("\nTotal nodes are " + totalNumberOfNodes(root));
   }
 }
