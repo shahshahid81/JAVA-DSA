@@ -58,6 +58,155 @@ class BTreeNode {
       this.child[i + 1].insert(data);
     }
   }
+
+  int findKey(int data) {
+    int index = 0;
+    while (index < this.capacity && this.data[index] < data) {
+      ++index;
+    }
+    return index;
+  }
+
+  void removeFromLeaf(int index) {
+    for (int i = index + 1; i < this.capacity; ++i) {
+      this.data[i - 1] = this.data[i];
+    }
+    this.capacity--;
+  }
+
+  void removeFromNonLeaf(int index) {
+    int dataToRemove = this.data[index];
+    if (this.child[index].capacity >= this.size) {
+      int predecessor = getPredecessor(index);
+      this.data[index] = predecessor;
+      this.child[index].remove(predecessor);
+    } else if (this.child[index + 1].capacity >= this.size) {
+      int successor = getSuccessor(index);
+      this.data[index] = successor;
+      this.child[index + 1].remove(successor);
+    } else {
+      merge(index);
+      this.child[index].remove(dataToRemove);
+    }
+  }
+
+  int getPredecessor(int index) {
+    BTreeNode current = this.child[index];
+    while (!current.isLeaf) {
+      current = current.child[current.capacity];
+    }
+    return current.data[current.capacity - 1];
+  }
+
+  int getSuccessor(int index) {
+    BTreeNode current = this.child[index + 1];
+    while (!current.isLeaf) {
+      current = current.child[0];
+    }
+    return current.data[0];
+  }
+
+  void fill(int index) {
+    if (index != 0 && this.child[index - 1].capacity >= this.size) {
+      borrowFromPrev(index);
+    } else if (index != this.capacity && this.child[index + 1].capacity >= this.size) {
+      borrowFromNext(index);
+    } else {
+      if (index != this.capacity) {
+        merge(index);
+      } else {
+        merge(index - 1);
+      }
+    }
+  }
+
+  void borrowFromPrev(int index) {
+    BTreeNode child = this.child[index];
+    BTreeNode sibling = this.child[index - 1];
+    for (int i = child.capacity - 1; i >= 0; --i) {
+      child.data[i + 1] = child.data[i];
+    }
+    if (!child.isLeaf) {
+      for (int i = child.capacity; i >= 0; --i) {
+        child.child[i + 1] = child.child[i];
+      }
+    }
+    child.data[0] = data[index - 1];
+    if (!child.isLeaf) {
+      child.child[0] = sibling.child[sibling.capacity];
+    }
+    data[index - 1] = sibling.data[sibling.capacity - 1];
+    child.capacity += 1;
+    sibling.capacity -= 1;
+  }
+
+  void borrowFromNext(int index) {
+    BTreeNode child = this.child[index];
+    BTreeNode sibling = this.child[index + 1];
+    child.data[(child.capacity)] = data[index];
+    if (!(child.isLeaf)) {
+      child.child[(child.capacity) + 1] = sibling.child[0];
+    }
+    data[index] = sibling.data[0];
+    for (int i = 1; i < sibling.capacity; ++i) {
+      sibling.data[i - 1] = sibling.data[i];
+    }
+    if (!sibling.isLeaf) {
+      for (int i = 1; i <= sibling.capacity; ++i) {
+        sibling.child[i - 1] = sibling.child[i];
+      }
+    }
+    child.capacity += 1;
+    sibling.capacity -= 1;
+  }
+
+  void merge(int index) {
+    BTreeNode child = this.child[index];
+    BTreeNode sibling = this.child[index + 1];
+    child.data[this.size - 1] = data[index];
+    for (int i = 0; i < sibling.capacity; ++i) {
+      child.data[i + this.size] = sibling.data[i];
+    }
+    if (!child.isLeaf) {
+      for (int i = 0; i <= sibling.capacity; ++i) {
+        child.child[i + this.size] = sibling.child[i];
+      }
+    }
+    for (int i = index + 1; i < this.capacity; ++i) {
+      data[i - 1] = data[i];
+    }
+    for (int i = index + 2; i <= this.capacity; ++i) {
+      this.child[i - 1] = this.child[i];
+    }
+    child.capacity += sibling.capacity + 1;
+    this.capacity--;
+    sibling = null;
+  }
+
+  void remove(int data) {
+    int index = findKey(data);
+    if (index < this.capacity && this.data[index] == data) {
+      if (this.isLeaf) {
+        removeFromLeaf(index);
+      } else {
+        removeFromNonLeaf(index);
+      }
+    } else {
+      if (this.isLeaf) {
+        System.out.println("The key " + data + " is does not exist in the tree\n");
+      } else {
+        boolean flag = ((index == this.capacity) ? true : false);
+        if (this.child[index].capacity < this.size) {
+          fill(index);
+        }
+        if (flag && index > this.capacity) {
+          this.child[index - 1].remove(data);
+        } else {
+          this.child[index].remove(data);
+        }
+      }
+    }
+  }
 }
 
 class BTree {
@@ -108,10 +257,16 @@ class BTree {
   }
 
   public static void main(String args[]) {
-    int[] elements = { 10, 20, 5, 6, 12, 39, 7, 17 };
-    for (int i : elements) {
+    int[] insertElement = { 1, 3, 7, 10, 11, 13, 14, 15, 18, 16, 19, 24, 25, 26, 21, 4, 5, 20, 22, 2, 17, 12, 6 };
+    for (int i : insertElement) {
       insert(i);
     }
     traverse();
+    int[] deleteElements = { 6, 13, 7, 4, 2, 16 };
+    for (int i : deleteElements) {
+      System.out.print("\nRemoving " + i + ":");
+      root.remove(i);
+      traverse();
+    }
   }
 }
