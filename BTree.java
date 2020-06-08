@@ -195,11 +195,11 @@ class BTreeNode {
       if (this.isLeaf) {
         System.out.println("The key " + data + " is does not exist in the tree\n");
       } else {
-        boolean flag = ((index == this.capacity) ? true : false);
+        boolean isKeyInLastChild = ((index == this.capacity) ? true : false);
         if (this.child[index].capacity < this.size) {
           fill(index);
         }
-        if (flag && index > this.capacity) {
+        if (isKeyInLastChild && index > this.capacity) {
           this.child[index - 1].remove(data);
         } else {
           this.child[index].remove(data);
