@@ -26,11 +26,49 @@ class Graph {
   static void printGraph(ArrayList<ArrayList<Integer>> adjacencyList) {
     for (int i = 0; i < adjacencyList.size(); i++) {
       System.out.print("\nEdges of " + i);
-      Iterator itr = adjacencyList.get(i).iterator();
+      Iterator<Integer> itr = adjacencyList.get(i).iterator();
       while (itr.hasNext()) {
         System.out.print("->" + itr.next());
       }
       System.out.println();
+    }
+  }
+
+  static void BFS(int[][] adjacencyMatrix, int startingVertex) {
+    System.out.println("\nBFS Iteration using adjacency matrix starting from: " + startingVertex);
+    boolean[] visitedArray = new boolean[numberOfVertices];
+    java.util.PriorityQueue<Integer> q = new java.util.PriorityQueue<Integer>();
+    q.offer(startingVertex);
+    visitedArray[startingVertex] = true;
+    while (!q.isEmpty()) {
+      int currentVertex = q.poll();
+      for (int i = 0; i < numberOfVertices; i++) {
+        if (adjacencyMatrix[currentVertex][i] == 1 && !visitedArray[i]) {
+          q.offer(i);
+          visitedArray[i] = true;
+        }
+      }
+      System.out.print(currentVertex + "\t");
+    }
+  }
+
+  static void BFS(ArrayList<ArrayList<Integer>> adjacencyList, int startingVertex) {
+    System.out.println("\nBFS Iteration using adjacency list starting from: " + startingVertex);
+    boolean[] visitedArray = new boolean[numberOfVertices];
+    java.util.PriorityQueue<Integer> q = new java.util.PriorityQueue<Integer>();
+    q.offer(startingVertex);
+    visitedArray[startingVertex] = true;
+    while (!q.isEmpty()) {
+      int currentVertex = q.poll();
+      Iterator<Integer> it = adjacencyList.get(currentVertex).iterator();
+      while (it.hasNext()) {
+        int currentValue = it.next();
+        if (!visitedArray[currentValue]) {
+          q.offer(currentValue);
+          visitedArray[currentValue] = true;
+        }
+      }
+      System.out.print(currentVertex + "\t");
     }
   }
 
@@ -58,5 +96,11 @@ class Graph {
     addEdge(adjacencyList, 2, 3);
     addEdge(adjacencyList, 3, 4);
     printGraph(adjacencyList);
+
+    BFS(adjacencyMatrix, 1);
+    BFS(adjacencyMatrix, 4);
+
+    BFS(adjacencyList, 1);
+    BFS(adjacencyList, 4);
   }
 }
