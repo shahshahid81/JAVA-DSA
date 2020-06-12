@@ -34,6 +34,56 @@ class Graph {
     }
   }
 
+  static void DFS(int[][] adjacencyMatrix, int startingVertex) {
+    System.out.println("\nDFS Iteration using adjacency matrix starting from: " + startingVertex);
+    boolean[] visitedArray = new boolean[numberOfVertices];
+    java.util.Stack<Integer> stack = new java.util.Stack<Integer>();
+    stack.push(startingVertex);
+    visitedArray[startingVertex] = true;
+    while (!stack.isEmpty()) {
+      int currentVertex = stack.peek();
+      boolean noAdjacentNeighbors = true;
+      for (int i = 0; i < numberOfVertices; i++) {
+        if (adjacencyMatrix[currentVertex][i] == 1 && !visitedArray[i]) {
+          stack.push(i);
+          visitedArray[i] = true;
+          noAdjacentNeighbors = false;
+          break;
+        }
+      }
+      if (noAdjacentNeighbors) {
+        currentVertex = stack.pop();
+        System.out.print(currentVertex + "\t");
+      }
+    }
+  }
+
+  static void DFS(ArrayList<ArrayList<Integer>> adjacencyList, int startingVertex) {
+    System.out.println("\nDFS Iteration using adjacency list starting from: " + startingVertex);
+    boolean[] visitedArray = new boolean[numberOfVertices];
+    java.util.Stack<Integer> stack = new java.util.Stack<Integer>();
+    stack.push(startingVertex);
+    visitedArray[startingVertex] = true;
+    while (!stack.isEmpty()) {
+      int currentVertex = stack.peek();
+      boolean noAdjacentNeighbors = true;
+      Iterator<Integer> it = adjacencyList.get(currentVertex).iterator();
+      while (it.hasNext()) {
+        int nextValue = it.next();
+        if (!visitedArray[nextValue]) {
+          stack.push(nextValue);
+          visitedArray[nextValue] = true;
+          noAdjacentNeighbors = false;
+          break;
+        }
+      }
+      if (noAdjacentNeighbors) {
+        currentVertex = stack.pop();
+        System.out.print(currentVertex + "\t");
+      }
+    }
+  }
+
   static void BFS(int[][] adjacencyMatrix, int startingVertex) {
     System.out.println("\nBFS Iteration using adjacency matrix starting from: " + startingVertex);
     boolean[] visitedArray = new boolean[numberOfVertices];
@@ -102,5 +152,12 @@ class Graph {
 
     BFS(adjacencyList, 1);
     BFS(adjacencyList, 4);
+
+    DFS(adjacencyMatrix, 1);
+    DFS(adjacencyMatrix, 4);
+
+    DFS(adjacencyList, 1);
+    DFS(adjacencyList, 4);
+
   }
 }
