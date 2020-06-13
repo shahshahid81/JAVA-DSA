@@ -8,18 +8,18 @@ class Graph {
   static void addEdge(int[][] adjacencyMatrix, int u, int v) {
     adjacencyMatrix[u][v] = 1;
     if (!isDirectedGraph) {
-    adjacencyMatrix[v][u] = 1;
-  }
+      adjacencyMatrix[v][u] = 1;
+    }
   }
 
   static void addEdge(ArrayList<ArrayList<Integer>> adjacencyList, int u, int v) {
     if (!adjacencyList.get(u).contains(v)) {
-    adjacencyList.get(u).add(v);
+      adjacencyList.get(u).add(v);
     }
     if (!isDirectedGraph) {
       if (!adjacencyList.get(u).contains(v)) {
-    adjacencyList.get(v).add(u);
-  }
+        adjacencyList.get(v).add(u);
+      }
     }
   }
 
@@ -120,7 +120,7 @@ class Graph {
     java.util.PriorityQueue<Integer> q = new java.util.PriorityQueue<Integer>();
     q.offer(startingVertex);
     visitedArray[startingVertex] = true;
-    System.out.print(startingVertex);
+    System.out.print(startingVertex + "\t");
     while (!q.isEmpty()) {
       int currentVertex = q.poll();
       Iterator<Integer> it = adjacencyList.get(currentVertex).iterator();
