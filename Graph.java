@@ -2,8 +2,8 @@ import java.util.*;
 
 class Graph {
 
-  static int numberOfVertices = 5;
-  static boolean isDirectedGraph = false;
+  static int numberOfVertices = 6;
+  static boolean isDirectedGraph = true;
 
   static void addEdge(int[][] adjacencyMatrix, int u, int v) {
     adjacencyMatrix[u][v] = 1;
@@ -65,6 +65,16 @@ class Graph {
       if (noAdjacentNeighbors) {
         currentVertex = stack.pop();
       }
+      if (stack.isEmpty()) {
+        for (int i = 0; i < numberOfVertices; i++) {
+          if (!visitedArray[i]) {
+            System.out.print(i + "\t");
+            stack.push(i);
+            visitedArray[i] = true;
+            break;
+          }
+        }
+      }
     }
   }
 
@@ -92,6 +102,16 @@ class Graph {
       if (noAdjacentNeighbors) {
         currentVertex = stack.pop();
       }
+      if (stack.isEmpty()) {
+        for (int i = 0; i < numberOfVertices; i++) {
+          if (!visitedArray[i]) {
+            stack.push(i);
+            visitedArray[i] = true;
+            System.out.print(i + "\t");
+            break;
+          }
+        }
+      }
     }
   }
 
@@ -109,6 +129,16 @@ class Graph {
           q.offer(i);
           visitedArray[i] = true;
           System.out.print(i + "\t");
+        }
+      }
+      if (q.isEmpty()) {
+        for (int i = 0; i < numberOfVertices; i++) {
+          if (!visitedArray[i]) {
+            q.offer(i);
+            visitedArray[i] = true;
+            System.out.print(i + "\t");
+            break;
+          }
         }
       }
     }
@@ -132,45 +162,38 @@ class Graph {
           visitedArray[currentValue] = true;
         }
       }
+      if (q.isEmpty()) {
+        for (int i = 0; i < numberOfVertices; i++) {
+          if (!visitedArray[i]) {
+            q.offer(i);
+            visitedArray[i] = true;
+            System.out.print(i + "\t");
+            break;
+          }
+        }
+      }
     }
   }
 
   public static void main(String[] args) {
     int[][] adjacencyMatrix = new int[numberOfVertices][numberOfVertices];
-    addEdge(adjacencyMatrix, 0, 1);
-    addEdge(adjacencyMatrix, 0, 4);
-    addEdge(adjacencyMatrix, 1, 2);
-    addEdge(adjacencyMatrix, 1, 3);
-    addEdge(adjacencyMatrix, 1, 4);
-    addEdge(adjacencyMatrix, 2, 3);
-    addEdge(adjacencyMatrix, 3, 4);
-    printGraph(adjacencyMatrix);
-
     ArrayList<ArrayList<Integer>> adjacencyList = new ArrayList<ArrayList<Integer>>(numberOfVertices);
     for (int i = 0; i < numberOfVertices; i++) {
       adjacencyList.add(new ArrayList<Integer>());
     }
-
-    addEdge(adjacencyList, 0, 1);
-    addEdge(adjacencyList, 0, 4);
-    addEdge(adjacencyList, 1, 2);
-    addEdge(adjacencyList, 1, 3);
-    addEdge(adjacencyList, 1, 4);
+    addEdge(adjacencyMatrix, 4, 0);
+    addEdge(adjacencyMatrix, 4, 1);
+    addEdge(adjacencyMatrix, 5, 0);
+    addEdge(adjacencyMatrix, 5, 2);
+    addEdge(adjacencyMatrix, 2, 3);
+    addEdge(adjacencyMatrix, 3, 1);
+    DFS(adjacencyMatrix, 5);
+    addEdge(adjacencyList, 4, 0);
+    addEdge(adjacencyList, 4, 1);
+    addEdge(adjacencyList, 5, 0);
+    addEdge(adjacencyList, 5, 2);
     addEdge(adjacencyList, 2, 3);
-    addEdge(adjacencyList, 3, 4);
-    printGraph(adjacencyList);
-
-    BFS(adjacencyMatrix, 1);
-    BFS(adjacencyMatrix, 4);
-
-    BFS(adjacencyList, 1);
-    BFS(adjacencyList, 4);
-
-    DFS(adjacencyMatrix, 1);
-    DFS(adjacencyMatrix, 4);
-
-    DFS(adjacencyList, 1);
-    DFS(adjacencyList, 4);
-
+    addEdge(adjacencyList, 3, 1);
+    DFS(adjacencyList, 5);
   }
 }
