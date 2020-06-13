@@ -43,6 +43,43 @@ class Graph {
     }
   }
 
+  static void topologicalSort(int[][] adjacencyMatrix, int startingVertex) {
+    System.out.println("\nTopological Sorting using adjacency matrix starting from: " + startingVertex);
+    boolean[] visitedArray = new boolean[numberOfVertices];
+    java.util.Stack<Integer> stack = new java.util.Stack<Integer>();
+    java.util.Stack<Integer> printStack = new java.util.Stack<Integer>();
+    stack.push(startingVertex);
+    visitedArray[startingVertex] = true;
+    while (!stack.isEmpty()) {
+      int currentVertex = stack.peek();
+      boolean noAdjacentNeighbors = true;
+      for (int i = 0; i < numberOfVertices; i++) {
+        if (adjacencyMatrix[currentVertex][i] == 1 && !visitedArray[i]) {
+          stack.push(i);
+          visitedArray[i] = true;
+          noAdjacentNeighbors = false;
+          break;
+        }
+      }
+      if (noAdjacentNeighbors) {
+        currentVertex = stack.pop();
+        printStack.push(currentVertex);
+      }
+      if (stack.isEmpty()) {
+        for (int i = 0; i < numberOfVertices; i++) {
+          if (!visitedArray[i]) {
+            stack.push(i);
+            visitedArray[i] = true;
+            break;
+          }
+        }
+      }
+    }
+    while (!printStack.isEmpty()) {
+      System.out.print(printStack.pop() + "\t");
+    }
+  }
+
   static void DFS(int[][] adjacencyMatrix, int startingVertex) {
     System.out.println("\nDFS Iteration using adjacency matrix starting from: " + startingVertex);
     boolean[] visitedArray = new boolean[numberOfVertices];
@@ -183,17 +220,20 @@ class Graph {
     }
     addEdge(adjacencyMatrix, 4, 0);
     addEdge(adjacencyMatrix, 4, 1);
-    addEdge(adjacencyMatrix, 5, 0);
     addEdge(adjacencyMatrix, 5, 2);
+    addEdge(adjacencyMatrix, 5, 0);
     addEdge(adjacencyMatrix, 2, 3);
     addEdge(adjacencyMatrix, 3, 1);
-    DFS(adjacencyMatrix, 5);
-    addEdge(adjacencyList, 4, 0);
-    addEdge(adjacencyList, 4, 1);
-    addEdge(adjacencyList, 5, 0);
-    addEdge(adjacencyList, 5, 2);
-    addEdge(adjacencyList, 2, 3);
-    addEdge(adjacencyList, 3, 1);
-    DFS(adjacencyList, 5);
+    topologicalSort(adjacencyMatrix, 3);
+    // BFS(adjacencyMatrix, 5);
+    // DFS(adjacencyMatrix, 5);
+    // addEdge(adjacencyList, 4, 0);
+    // addEdge(adjacencyList, 4, 1);
+    // addEdge(adjacencyList, 5, 0);
+    // addEdge(adjacencyList, 5, 2);
+    // addEdge(adjacencyList, 2, 3);
+    // addEdge(adjacencyList, 3, 1);
+    // BFS(adjacencyList, 5);
+    // DFS(adjacencyList, 5);
   }
 }
