@@ -3,15 +3,24 @@ import java.util.*;
 class Graph {
 
   static int numberOfVertices = 5;
+  static boolean isDirectedGraph = false;
 
   static void addEdge(int[][] adjacencyMatrix, int u, int v) {
     adjacencyMatrix[u][v] = 1;
+    if (!isDirectedGraph) {
     adjacencyMatrix[v][u] = 1;
+  }
   }
 
   static void addEdge(ArrayList<ArrayList<Integer>> adjacencyList, int u, int v) {
+    if (!adjacencyList.get(u).contains(v)) {
     adjacencyList.get(u).add(v);
+    }
+    if (!isDirectedGraph) {
+      if (!adjacencyList.get(u).contains(v)) {
     adjacencyList.get(v).add(u);
+  }
+    }
   }
 
   static void printGraph(int[][] adjacencyMatrix) {
@@ -40,11 +49,13 @@ class Graph {
     java.util.Stack<Integer> stack = new java.util.Stack<Integer>();
     stack.push(startingVertex);
     visitedArray[startingVertex] = true;
+    System.out.print(startingVertex + "\t");
     while (!stack.isEmpty()) {
       int currentVertex = stack.peek();
       boolean noAdjacentNeighbors = true;
       for (int i = 0; i < numberOfVertices; i++) {
         if (adjacencyMatrix[currentVertex][i] == 1 && !visitedArray[i]) {
+          System.out.print(i + "\t");
           stack.push(i);
           visitedArray[i] = true;
           noAdjacentNeighbors = false;
@@ -53,7 +64,6 @@ class Graph {
       }
       if (noAdjacentNeighbors) {
         currentVertex = stack.pop();
-        System.out.print(currentVertex + "\t");
       }
     }
   }
@@ -64,6 +74,7 @@ class Graph {
     java.util.Stack<Integer> stack = new java.util.Stack<Integer>();
     stack.push(startingVertex);
     visitedArray[startingVertex] = true;
+    System.out.print(startingVertex + "\t");
     while (!stack.isEmpty()) {
       int currentVertex = stack.peek();
       boolean noAdjacentNeighbors = true;
@@ -71,6 +82,7 @@ class Graph {
       while (it.hasNext()) {
         int nextValue = it.next();
         if (!visitedArray[nextValue]) {
+          System.out.print(nextValue + "\t");
           stack.push(nextValue);
           visitedArray[nextValue] = true;
           noAdjacentNeighbors = false;
@@ -79,7 +91,6 @@ class Graph {
       }
       if (noAdjacentNeighbors) {
         currentVertex = stack.pop();
-        System.out.print(currentVertex + "\t");
       }
     }
   }
@@ -90,15 +101,16 @@ class Graph {
     java.util.PriorityQueue<Integer> q = new java.util.PriorityQueue<Integer>();
     q.offer(startingVertex);
     visitedArray[startingVertex] = true;
+    System.out.print(startingVertex + "\t");
     while (!q.isEmpty()) {
       int currentVertex = q.poll();
       for (int i = 0; i < numberOfVertices; i++) {
         if (adjacencyMatrix[currentVertex][i] == 1 && !visitedArray[i]) {
           q.offer(i);
           visitedArray[i] = true;
+          System.out.print(i + "\t");
         }
       }
-      System.out.print(currentVertex + "\t");
     }
   }
 
@@ -108,17 +120,18 @@ class Graph {
     java.util.PriorityQueue<Integer> q = new java.util.PriorityQueue<Integer>();
     q.offer(startingVertex);
     visitedArray[startingVertex] = true;
+    System.out.print(startingVertex);
     while (!q.isEmpty()) {
       int currentVertex = q.poll();
       Iterator<Integer> it = adjacencyList.get(currentVertex).iterator();
       while (it.hasNext()) {
         int currentValue = it.next();
         if (!visitedArray[currentValue]) {
+          System.out.print(currentValue + "\t");
           q.offer(currentValue);
           visitedArray[currentValue] = true;
         }
       }
-      System.out.print(currentVertex + "\t");
     }
   }
 
