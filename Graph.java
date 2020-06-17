@@ -2,7 +2,7 @@ import java.util.*;
 
 class Graph {
 
-  static int numberOfVertices = 6;
+  static int numberOfVertices = 5;
   static boolean isDirectedGraph = true;
 
   static void addEdge(int[][] adjacencyMatrix, int u, int v) {
@@ -41,6 +41,46 @@ class Graph {
       }
       System.out.println();
     }
+  }
+
+  static void printMST(int parent[], int graph[][]) {
+    System.out.println("Edge \tWeight");
+    for (int i = 1; i < numberOfVertices; i++)
+      System.out.println(parent[i] + " - " + i + "\t" + graph[i][parent[i]]);
+  }
+
+  static int minKey(int key[], Boolean mstSet[]) {
+    int min = Integer.MAX_VALUE, min_index = -1;
+    for (int v = 0; v < numberOfVertices; v++) {
+      if (mstSet[v] == false && key[v] < min) {
+        min = key[v];
+        min_index = v;
+      }
+    }
+    return min_index;
+  }
+
+  static void minimumSpanningTreePrim(int[][] adjacencyMatrix) {
+    int parent[] = new int[numberOfVertices];
+    int key[] = new int[numberOfVertices];
+    Boolean mstSet[] = new Boolean[numberOfVertices];
+    for (int i = 0; i < numberOfVertices; i++) {
+      key[i] = Integer.MAX_VALUE;
+      mstSet[i] = false;
+    }
+    key[0] = 0;
+    parent[0] = -1;
+    for (int count = 0; count < numberOfVertices - 1; count++) {
+      int u = minKey(key, mstSet);
+      mstSet[u] = true;
+      for (int v = 0; v < numberOfVertices; v++) {
+        if (adjacencyMatrix[u][v] != 0 && mstSet[v] == false && adjacencyMatrix[u][v] < key[v]) {
+          parent[v] = u;
+          key[v] = adjacencyMatrix[u][v];
+        }
+      }
+    }
+    printMST(parent, adjacencyMatrix);
   }
 
   static void topologicalSort(int[][] adjacencyMatrix, int startingVertex) {
@@ -213,27 +253,10 @@ class Graph {
   }
 
   public static void main(String[] args) {
-    int[][] adjacencyMatrix = new int[numberOfVertices][numberOfVertices];
-    ArrayList<ArrayList<Integer>> adjacencyList = new ArrayList<ArrayList<Integer>>(numberOfVertices);
-    for (int i = 0; i < numberOfVertices; i++) {
-      adjacencyList.add(new ArrayList<Integer>());
-    }
-    addEdge(adjacencyMatrix, 4, 0);
-    addEdge(adjacencyMatrix, 4, 1);
-    addEdge(adjacencyMatrix, 5, 2);
-    addEdge(adjacencyMatrix, 5, 0);
-    addEdge(adjacencyMatrix, 2, 3);
-    addEdge(adjacencyMatrix, 3, 1);
-    topologicalSort(adjacencyMatrix, 3);
-    // BFS(adjacencyMatrix, 5);
-    // DFS(adjacencyMatrix, 5);
-    // addEdge(adjacencyList, 4, 0);
-    // addEdge(adjacencyList, 4, 1);
-    // addEdge(adjacencyList, 5, 0);
-    // addEdge(adjacencyList, 5, 2);
-    // addEdge(adjacencyList, 2, 3);
-    // addEdge(adjacencyList, 3, 1);
-    // BFS(adjacencyList, 5);
-    // DFS(adjacencyList, 5);
+    int[][] adjacencyMatrix = { { 0, 2, 0, 6, 0 }, { 2, 0, 3, 8, 5 }, { 0, 3, 0, 0, 7 }, { 6, 8, 0, 0, 9 },
+        { 0, 5, 7, 9, 0 } };
+    printGraph(adjacencyMatrix);
+    minimumSpanningTreePrim(adjacencyMatrix);
   }
+
 }
