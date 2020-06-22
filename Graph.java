@@ -1,9 +1,28 @@
 import java.util.*;
 
+class WeightedGraphEdgeNode {
+  int src;
+  int dest;
+  int weight;
+
+  WeightedGraphEdgeNode(int src, int dest, int weight) {
+    this.src = src;
+    this.dest = dest;
+    this.weight = weight;
+  }
+}
+
+class WeightedGraphEdgeNodeComparator implements Comparator<WeightedGraphEdgeNode> {
+  public int compare(WeightedGraphEdgeNode n1, WeightedGraphEdgeNode n2) {
+    return n1.weight - n2.weight;
+  }
+}
+
 class Graph {
 
   static int numberOfVertices = 5;
-  static boolean isDirectedGraph = true;
+  static boolean isDirectedGraph = false;
+  static int MAX = Integer.MAX_VALUE;
 
   static void addEdge(int[][] adjacencyMatrix, int u, int v) {
     adjacencyMatrix[u][v] = 1;
@@ -23,10 +42,15 @@ class Graph {
     }
   }
 
+  static void addEdge(ArrayList<WeightedGraphEdgeNode> adjacencyList, int u, int v, int weight) {
+    WeightedGraphEdgeNode node = new WeightedGraphEdgeNode(u, v, weight);
+    adjacencyList.add(node);
+  }
+
   static void printGraph(int[][] adjacencyMatrix) {
     for (int i = 0; i < adjacencyMatrix.length; i++) {
       for (int j = 0; j < adjacencyMatrix.length; j++) {
-        System.out.print(adjacencyMatrix[i][j]);
+        System.out.print(adjacencyMatrix[i][j] + " ");
       }
       System.out.println();
     }
@@ -43,6 +67,14 @@ class Graph {
     }
   }
 
+  static void printGraphWeighted(ArrayList<WeightedGraphEdgeNode> adjacencyList) {
+    for (int i = 0; i < adjacencyList.size(); i++) {
+      WeightedGraphEdgeNode node = adjacencyList.get(i);
+      System.out.print(node.src + " ---- " + node.dest + "(" + node.weight + ")");
+      System.out.println();
+    }
+  }
+
   static void printMST(int parent[], int graph[][]) {
     System.out.println("Edge \tWeight");
     for (int i = 1; i < numberOfVertices; i++)
@@ -50,7 +82,7 @@ class Graph {
   }
 
   static int minKey(int key[], Boolean mstSet[]) {
-    int min = Integer.MAX_VALUE, min_index = -1;
+    int min = MAX, min_index = -1;
     for (int v = 0; v < numberOfVertices; v++) {
       if (mstSet[v] == false && key[v] < min) {
         min = key[v];
@@ -65,7 +97,7 @@ class Graph {
     int key[] = new int[numberOfVertices];
     Boolean mstSet[] = new Boolean[numberOfVertices];
     for (int i = 0; i < numberOfVertices; i++) {
-      key[i] = Integer.MAX_VALUE;
+      key[i] = MAX;
       mstSet[i] = false;
     }
     key[0] = 0;
@@ -81,6 +113,27 @@ class Graph {
       }
     }
     printMST(parent, adjacencyMatrix);
+  }
+
+  static void minimumSpanningTreeKruskal(ArrayList<WeightedGraphEdgeNode> adjacencyList) {
+    Collections.sort(adjacencyList, new WeightedGraphEdgeNodeComparator());
+    DisjointSet ds = new DisjointSet();
+    for (int i = 0; i < numberOfVertices; i++) {
+      ds.makeSet(i);
+    }
+    ArrayList<WeightedGraphEdgeNode> result = new ArrayList<>();
+    int edgeCount = adjacencyList.size() - 1;
+    for (int i = 0; i < adjacencyList.size(); i++) {
+      WeightedGraphEdgeNode node = adjacencyList.get(i);
+      if (ds.findSet(ds.dataMap.get(node.src)) != ds.findSet(ds.dataMap.get(node.dest))) {
+        result.add(new WeightedGraphEdgeNode(node.src, node.dest, node.weight));
+        ds.union(node.src, node.dest);
+        edgeCount--;
+      }
+      if (edgeCount == 0)
+        break;
+    }
+    printGraphWeighted(result);
   }
 
   static void topologicalSort(int[][] adjacencyMatrix, int startingVertex) {
@@ -257,6 +310,16 @@ class Graph {
         { 0, 5, 7, 9, 0 } };
     printGraph(adjacencyMatrix);
     minimumSpanningTreePrim(adjacencyMatrix);
+
+    ArrayList<WeightedGraphEdgeNode> adjacencyList = new ArrayList<>(numberOfVertices);
+    addEdge(adjacencyList, 0, 1, 2);
+    addEdge(adjacencyList, 0, 3, 6);
+    addEdge(adjacencyList, 2, 1, 3);
+    addEdge(adjacencyList, 1, 3, 8);
+    addEdge(adjacencyList, 1, 4, 5);
+    addEdge(adjacencyList, 2, 4, 6);
+    addEdge(adjacencyList, 3, 4, 9);
+    minimumSpanningTreeKruskal(adjacencyList);
   }
 
 }
