@@ -20,7 +20,7 @@ class WeightedGraphEdgeNodeComparator implements Comparator<WeightedGraphEdgeNod
 
 class Graph {
 
-  static int numberOfVertices = 5;
+  static int numberOfVertices = 9;
   static boolean isDirectedGraph = false;
   static int MAX = Integer.MAX_VALUE;
 
@@ -134,6 +134,42 @@ class Graph {
         break;
     }
     printGraphWeighted(result);
+  }
+
+  static int minDistance(int[] distance, boolean[] shortestPathSet) {
+    int minIndex = -1, min = MAX;
+    for (int i = 0; i < distance.length; i++) {
+      if (!shortestPathSet[i] && distance[i] <= min) {
+        min = distance[i];
+        minIndex = i;
+      }
+    }
+    return minIndex;
+  }
+
+  static void dijkstra(int[][] adjacencyMatrix) {
+    int numberOfVertices = adjacencyMatrix.length;
+    boolean[] shortestPathSet = new boolean[numberOfVertices];
+    int[] distance = new int[numberOfVertices];
+    for (int i = 0; i < numberOfVertices; i++) {
+      distance[i] = MAX;
+      shortestPathSet[i] = false;
+    }
+    distance[0] = 0;
+    for (int i = 0; i < numberOfVertices - 1; i++) {
+      int minimumIndex = minDistance(distance, shortestPathSet);
+      shortestPathSet[minimumIndex] = true;
+      for (int v = 0; v < numberOfVertices; v++) {
+        if (!shortestPathSet[v] && adjacencyMatrix[minimumIndex][v] != 0 && distance[minimumIndex] != MAX
+            && distance[minimumIndex] + adjacencyMatrix[minimumIndex][v] < distance[v]) {
+          distance[v] = distance[minimumIndex] + adjacencyMatrix[minimumIndex][v];
+        }
+      }
+    }
+    System.out.println("Vertex \t\t Distance from Source");
+    for (int i = 0; i < numberOfVertices; i++) {
+      System.out.println(i + " \t\t " + distance[i]);
+    }
   }
 
   static void topologicalSort(int[][] adjacencyMatrix, int startingVertex) {
@@ -306,20 +342,28 @@ class Graph {
   }
 
   public static void main(String[] args) {
-    int[][] adjacencyMatrix = { { 0, 2, 0, 6, 0 }, { 2, 0, 3, 8, 5 }, { 0, 3, 0, 0, 7 }, { 6, 8, 0, 0, 9 },
-        { 0, 5, 7, 9, 0 } };
-    printGraph(adjacencyMatrix);
-    minimumSpanningTreePrim(adjacencyMatrix);
+    // int[][] adjacencyMatrix = { { 0, 2, 0, 6, 0 }, { 2, 0, 3, 8, 5 }, { 0, 3, 0,
+    // 0, 7 }, { 6, 8, 0, 0, 9 },
+    // { 0, 5, 7, 9, 0 } };
+    // printGraph(adjacencyMatrix);
+    // minimumSpanningTreePrim(adjacencyMatrix);
 
-    ArrayList<WeightedGraphEdgeNode> adjacencyList = new ArrayList<>(numberOfVertices);
-    addEdge(adjacencyList, 0, 1, 2);
-    addEdge(adjacencyList, 0, 3, 6);
-    addEdge(adjacencyList, 2, 1, 3);
-    addEdge(adjacencyList, 1, 3, 8);
-    addEdge(adjacencyList, 1, 4, 5);
-    addEdge(adjacencyList, 2, 4, 6);
-    addEdge(adjacencyList, 3, 4, 9);
-    minimumSpanningTreeKruskal(adjacencyList);
+    // ArrayList<WeightedGraphEdgeNode> adjacencyList = new
+    // ArrayList<>(numberOfVertices);
+    // addEdge(adjacencyList, 0, 1, 2);
+    // addEdge(adjacencyList, 0, 3, 6);
+    // addEdge(adjacencyList, 2, 1, 3);
+    // addEdge(adjacencyList, 1, 3, 8);
+    // addEdge(adjacencyList, 1, 4, 5);
+    // addEdge(adjacencyList, 2, 4, 6);
+    // addEdge(adjacencyList, 3, 4, 9);
+    // minimumSpanningTreeKruskal(adjacencyList);
+
+    int[][] adjacencyMatrix = new int[][] { { 0, 4, 0, 0, 0, 0, 0, 8, 0 }, { 4, 0, 8, 0, 0, 0, 0, 11, 0 },
+        { 0, 8, 0, 7, 0, 4, 0, 0, 2 }, { 0, 0, 7, 0, 9, 14, 0, 0, 0 }, { 0, 0, 0, 9, 0, 10, 0, 0, 0 },
+        { 0, 0, 4, 14, 10, 0, 2, 0, 0 }, { 0, 0, 0, 0, 0, 2, 0, 1, 6 }, { 8, 11, 0, 0, 0, 0, 1, 0, 7 },
+        { 0, 0, 2, 0, 0, 0, 6, 7, 0 } };
+    dijkstra(adjacencyMatrix);
   }
 
 }
