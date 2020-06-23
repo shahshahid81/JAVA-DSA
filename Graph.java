@@ -172,6 +172,72 @@ class Graph {
     }
   }
 
+  static void floydWarshall(int[][] adjacencyMatrix) {
+    /**
+     * First copy adjacency matrix to distance matrix Declare path
+     * matrix[numberOfVertices][numberOfVertices] for i =0 to numberOfVertices for j
+     * =0 to numberOfVertices if(dist[i][j] != MAX && i!=j) path[i][j] = [i] else
+     * path[i][j] = -1 For i =0 to numberOfVertices For j=0 to numberOfVertices For
+     * k=0 to numberOfVertices if dist[i][j] > dist[i][k] + dist[k][j] dist[i][j] =
+     * dist[i][k] + dist[k][j]
+     */
+    int numberOfVertices = adjacencyMatrix.length;
+    int[][] distanceMatrix, pathMatrix;
+    distanceMatrix = new int[numberOfVertices][numberOfVertices];
+    pathMatrix = new int[numberOfVertices][numberOfVertices];
+    for (int i = 0; i < numberOfVertices; i++) {
+      for (int j = 0; j < numberOfVertices; j++) {
+        distanceMatrix[i][j] = adjacencyMatrix[i][j];
+        pathMatrix[i][j] = distanceMatrix[i][j] != MAX && i != j ? i : -1;
+      }
+    }
+    for (int i = 0; i < numberOfVertices; i++) {
+      for (int j = 0; j < numberOfVertices; j++) {
+        for (int k = 0; k < numberOfVertices; k++) {
+          if (distanceMatrix[k][j] == MAX || distanceMatrix[i][k] == MAX)
+            continue;
+          if (distanceMatrix[i][j] > distanceMatrix[i][k] + distanceMatrix[k][j]) {
+            distanceMatrix[i][j] = distanceMatrix[i][k] + distanceMatrix[k][j];
+            pathMatrix[i][j] = pathMatrix[k][j];
+          }
+        }
+      }
+    }
+    for (int i = 0; i < distanceMatrix.length; i++) {
+      for (int j = 0; j < distanceMatrix.length; j++) {
+        if (distanceMatrix[i][j] == MAX)
+          System.out.print("MAX ");
+        else
+          System.out.print(distanceMatrix[i][j] + " ");
+      }
+      System.out.println("");
+    }
+    printPath(pathMatrix, 0, 3);
+  }
+
+  static void printPath(int[][] path, int start, int end) {
+    if (start < 0 || end < 0 || start >= path.length || end >= path.length) {
+      return;
+    }
+    System.out.println("Actual path - between " + start + " " + end);
+    Deque<Integer> stack = new java.util.LinkedList<>();
+    stack.addFirst(end);
+    while (true) {
+      end = path[start][end];
+      if (end == -1) {
+        return;
+      }
+      stack.addFirst(end);
+      if (end == start) {
+        break;
+      }
+    }
+    while (!stack.isEmpty()) {
+      System.out.print(stack.pollFirst() + " ");
+    }
+    System.out.println();
+  }
+
   static void topologicalSort(int[][] adjacencyMatrix, int startingVertex) {
     System.out.println("\nTopological Sorting using adjacency matrix starting from: " + startingVertex);
     boolean[] visitedArray = new boolean[numberOfVertices];
@@ -359,11 +425,16 @@ class Graph {
     // addEdge(adjacencyList, 3, 4, 9);
     // minimumSpanningTreeKruskal(adjacencyList);
 
-    int[][] adjacencyMatrix = new int[][] { { 0, 4, 0, 0, 0, 0, 0, 8, 0 }, { 4, 0, 8, 0, 0, 0, 0, 11, 0 },
-        { 0, 8, 0, 7, 0, 4, 0, 0, 2 }, { 0, 0, 7, 0, 9, 14, 0, 0, 0 }, { 0, 0, 0, 9, 0, 10, 0, 0, 0 },
-        { 0, 0, 4, 14, 10, 0, 2, 0, 0 }, { 0, 0, 0, 0, 0, 2, 0, 1, 6 }, { 8, 11, 0, 0, 0, 0, 1, 0, 7 },
-        { 0, 0, 2, 0, 0, 0, 6, 7, 0 } };
-    dijkstra(adjacencyMatrix);
-  }
+    // int[][] adjacencyMatrix = new int[][] { { 0, 4, 0, 0, 0, 0, 0, 8, 0 }, { 4,
+    // 0, 8, 0, 0, 0, 0, 11, 0 },
+    // { 0, 8, 0, 7, 0, 4, 0, 0, 2 }, { 0, 0, 7, 0, 9, 14, 0, 0, 0 }, { 0, 0, 0, 9,
+    // 0, 10, 0, 0, 0 },
+    // { 0, 0, 4, 14, 10, 0, 2, 0, 0 }, { 0, 0, 0, 0, 0, 2, 0, 1, 6 }, { 8, 11, 0,
+    // 0, 0, 0, 1, 0, 7 },
+    // { 0, 0, 2, 0, 0, 0, 6, 7, 0 } };
+    // dijkstra(adjacencyMatrix);
 
+    int[][] adjacencyMatrix = { { 0, 5, MAX, 10 }, { MAX, 0, 3, MAX }, { MAX, MAX, 0, 1 }, { MAX, MAX, MAX, 0 } };
+    floydWarshall(adjacencyMatrix);
+  }
 }
