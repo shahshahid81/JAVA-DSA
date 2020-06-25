@@ -66,6 +66,35 @@ class Sort {
     return resultArray;
   }
 
+  void swap(int[] arr,int a,int b) {
+    int temp = arr[a];
+    arr[a] = arr[b];
+    arr[b] = temp;
+  }
+
+  int partition(int[] arr, int low, int high) {
+    int pivot = arr[high], i = low -1;
+    for(int j=low;j<=high-1;j++) {
+      if(arr[j] < pivot) {
+        swap(arr, ++i, j);
+      }
+    }
+    swap(arr, ++i, high);
+    return i;
+  }
+
+  void quickSort(int[] arr, int low, int high) {
+    if (low < high) {
+      int partitionIndex = partition(arr, low, high);
+      quickSort(arr, low, partitionIndex - 1);
+      quickSort(arr, partitionIndex + 1, high);
+    }
+  }
+
+  void quickSort(int[] arr) {
+    quickSort(arr, 0, arr.length - 1);
+  }
+
   public static void main(String[] args) {
     Sort sort = new Sort();
     int[] arr = { 3, 123, 43, 21, 492, 132, 93, 1, 600, 12 };
@@ -80,5 +109,7 @@ class Sort {
     printArray(arr3);
     int[] resultArray = sort.heapSort(arr4);
     printArray(resultArray);
+    sort.quickSort(arr4);
+    printArray(arr4);
   }
 }
