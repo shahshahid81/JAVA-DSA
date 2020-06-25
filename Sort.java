@@ -66,16 +66,16 @@ class Sort {
     return resultArray;
   }
 
-  void swap(int[] arr,int a,int b) {
+  void swap(int[] arr, int a, int b) {
     int temp = arr[a];
     arr[a] = arr[b];
     arr[b] = temp;
   }
 
   int partition(int[] arr, int low, int high) {
-    int pivot = arr[high], i = low -1;
-    for(int j=low;j<=high-1;j++) {
-      if(arr[j] < pivot) {
+    int pivot = arr[high], i = low - 1;
+    for (int j = low; j <= high - 1; j++) {
+      if (arr[j] < pivot) {
         swap(arr, ++i, j);
       }
     }
@@ -95,21 +95,72 @@ class Sort {
     quickSort(arr, 0, arr.length - 1);
   }
 
+  void merge(int[] arr, int low, int mid, int high) {
+    int n1 = mid - low + 1;
+    int n2 = high - mid;
+    int L[] = new int[n1];
+    int R[] = new int[n2];
+    for (int i = 0; i < n1; ++i) {
+      L[i] = arr[low + i];
+    }
+    for (int j = 0; j < n2; ++j) {
+      R[j] = arr[mid + 1 + j];
+    }
+    int i = 0, j = 0;
+    int k = low;
+    while (i < n1 && j < n2) {
+      if (L[i] <= R[j]) {
+        arr[k] = L[i];
+        i++;
+      } else {
+        arr[k] = R[j];
+        j++;
+      }
+      k++;
+    }
+    while (i < n1) {
+      arr[k] = L[i];
+      i++;
+      k++;
+    }
+    while (j < n2) {
+      arr[k] = R[j];
+      j++;
+      k++;
+    }
+  }
+
+  void mergeSort(int[] arr, int low, int high) {
+    if (low < high) {
+      int mid = (low + high) / 2;
+      mergeSort(arr, low, mid);
+      mergeSort(arr, mid + 1, high);
+      merge(arr, low, mid, high);
+    }
+  }
+
+  void mergeSort(int[] arr) {
+    mergeSort(arr, 0, arr.length - 1);
+  }
+
   public static void main(String[] args) {
     Sort sort = new Sort();
     int[] arr = { 3, 123, 43, 21, 492, 132, 93, 1, 600, 12 };
-    int[] arr2 = { 51, 323, 3, 11, 49 };
-    int[] arr3 = { 3, 123, 43, 21, 2, 121, 1, 600, 12 };
-    int[] arr4 = { 3, 331, 43, 21, 93, 1, 600, 12 };
     sort.bubbleSort(arr);
     printArray(arr);
+    int[] arr2 = { 51, 323, 3, 11, 49 };
     sort.selectionSort(arr2);
     printArray(arr2);
+    int[] arr3 = { 3, 123, 43, 21, 2, 121, 1, 600, 12 };
     sort.insertionSort(arr3);
     printArray(arr3);
+    int[] arr4 = { 3, 331, 43, 21, 93, 1, 600, 12 };
     int[] resultArray = sort.heapSort(arr4);
     printArray(resultArray);
     sort.quickSort(arr4);
     printArray(arr4);
+    int[] arr5 = { 39, 13, 23, 45, 62, 33, 29, 79, 58 };
+    sort.mergeSort(arr5);
+    printArray(arr5);
   }
 }
