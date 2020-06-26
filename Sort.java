@@ -143,24 +143,46 @@ class Sort {
     mergeSort(arr, 0, arr.length - 1);
   }
 
+  void shellSort(int[] arr) {
+    for (int gap = arr.length / 2; gap >= 1; gap /= 2) {
+      for (int i = 0, j = gap; j < arr.length; i++, j++) {
+        if (arr[i] > arr[j]) {
+          swap(arr, i, j);
+          if ((i - gap) >= 0) {
+            for (int k = i, l = i - gap; k >= 0; k -= gap, l -= gap) {
+              if (arr[k] > arr[l]) {
+                break;
+              } else {
+                swap(arr, k, l);
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
   public static void main(String[] args) {
     Sort sort = new Sort();
-    int[] arr = { 3, 123, 43, 21, 492, 132, 93, 1, 600, 12 };
-    sort.bubbleSort(arr);
-    printArray(arr);
-    int[] arr2 = { 51, 323, 3, 11, 49 };
-    sort.selectionSort(arr2);
-    printArray(arr2);
-    int[] arr3 = { 3, 123, 43, 21, 2, 121, 1, 600, 12 };
-    sort.insertionSort(arr3);
-    printArray(arr3);
-    int[] arr4 = { 3, 331, 43, 21, 93, 1, 600, 12 };
-    int[] resultArray = sort.heapSort(arr4);
-    printArray(resultArray);
-    sort.quickSort(arr4);
-    printArray(arr4);
-    int[] arr5 = { 39, 13, 23, 45, 62, 33, 29, 79, 58 };
-    sort.mergeSort(arr5);
-    printArray(arr5);
+    // int[] arr = { 3, 123, 43, 21, 492, 132, 93, 1, 600, 12 };
+    // sort.bubbleSort(arr);
+    // printArray(arr);
+    // int[] arr2 = { 51, 323, 3, 11, 49 };
+    // sort.selectionSort(arr2);
+    // printArray(arr2);
+    // int[] arr3 = { 3, 123, 43, 21, 2, 121, 1, 600, 12 };
+    // sort.insertionSort(arr3);
+    // printArray(arr3);
+    // int[] arr4 = { 3, 331, 43, 21, 93, 1, 600, 12 };
+    // int[] resultArray = sort.heapSort(arr4);
+    // printArray(resultArray);
+    // sort.quickSort(arr4);
+    // printArray(arr4);
+    // int[] arr5 = { 39, 13, 23, 45, 62, 33, 29, 79, 58 };
+    // sort.mergeSort(arr5);
+    // printArray(arr5);
+    int[] arr6 = { 9, 18, 3, 2, 36, 54, 22, 45 };
+    sort.shellSort(arr6);
+    printArray(arr6);
   }
 }
