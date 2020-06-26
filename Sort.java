@@ -162,27 +162,76 @@ class Sort {
     }
   }
 
+  int getMax(int[] arr) {
+    int max = arr[0];
+    for (int i = 1; i < arr.length; i++) {
+      if (arr[i] > max) {
+        max = arr[i];
+      }
+    }
+    return max;
+  }
+
+  void radixSort(int[] arr) {
+    int max = getMax(arr);
+    int numberOfDigits = 0;
+    while (max != 0) {
+      max = max / 10;
+      ++numberOfDigits;
+    }
+    int i = 1;
+    while (numberOfDigits-- > 0) {
+      int[] count = new int[10];
+      int[] output = new int[arr.length];
+      for (int j = 0; j < arr.length; j++) {
+        count[arr[j] / i % 10] += 1;
+      }
+      for (int j = 1; j < count.length; j++) {
+        count[j] += count[j - 1];
+      }
+      for (int j = arr.length - 1; j >= 0; j--) {
+        int index = arr[j] / i % 10;
+        count[index]--;
+        output[count[index]] = arr[j];
+      }
+      for (int j = 0; j < arr.length; j++) {
+        arr[j] = output[j];
+      }
+      i *= 10;
+    }
+  }
+
   public static void main(String[] args) {
     Sort sort = new Sort();
-    // int[] arr = { 3, 123, 43, 21, 492, 132, 93, 1, 600, 12 };
-    // sort.bubbleSort(arr);
-    // printArray(arr);
-    // int[] arr2 = { 51, 323, 3, 11, 49 };
-    // sort.selectionSort(arr2);
-    // printArray(arr2);
-    // int[] arr3 = { 3, 123, 43, 21, 2, 121, 1, 600, 12 };
-    // sort.insertionSort(arr3);
-    // printArray(arr3);
-    // int[] arr4 = { 3, 331, 43, 21, 93, 1, 600, 12 };
-    // int[] resultArray = sort.heapSort(arr4);
-    // printArray(resultArray);
-    // sort.quickSort(arr4);
-    // printArray(arr4);
-    // int[] arr5 = { 39, 13, 23, 45, 62, 33, 29, 79, 58 };
-    // sort.mergeSort(arr5);
-    // printArray(arr5);
+    int[] arr = { 3, 123, 43, 21, 492, 132, 93, 1, 600, 12 };
+    sort.bubbleSort(arr);
+    printArray(arr);
+
+    int[] arr2 = { 51, 323, 3, 11, 49 };
+    sort.selectionSort(arr2);
+    printArray(arr2);
+
+    int[] arr3 = { 3, 123, 43, 21, 2, 121, 1, 600, 12 };
+    sort.insertionSort(arr3);
+    printArray(arr3);
+
+    int[] arr4 = { 3, 331, 43, 21, 93, 1, 600, 12 };
+    int[] resultArray = sort.heapSort(arr4);
+    printArray(resultArray);
+
+    sort.quickSort(arr4);
+    printArray(arr4);
+
+    int[] arr5 = { 39, 13, 23, 45, 62, 33, 29, 79, 58 };
+    sort.mergeSort(arr5);
+    printArray(arr5);
+
     int[] arr6 = { 9, 18, 3, 2, 36, 54, 22, 45 };
     sort.shellSort(arr6);
     printArray(arr6);
+
+    int[] arr7 = { 41, 2, 10, 95, 38, 9, 4, 500, 368 };
+    sort.radixSort(arr7);
+    printArray(arr7);
   }
 }
