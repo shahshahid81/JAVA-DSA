@@ -55,7 +55,7 @@ class CircularLinkedList {
 
   static void insertAfterNode(int nodeValue, int data) {
     CircularLinkedListNode nodeToInsertAfter = head;
-    while (nodeToInsertAfter.data != nodeValue) {
+    while (nodeToInsertAfter != null && nodeToInsertAfter.data != nodeValue) {
       nodeToInsertAfter = nodeToInsertAfter.next;
     }
     if (nodeToInsertAfter == null) {

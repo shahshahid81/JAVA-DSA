@@ -58,7 +58,7 @@ class CircularDoublyLinkedList {
 
   static void insertAfterNode(int nodeValue, int data) {
     CircularDoublyLinkedListNode nodeToInsertAfter = head;
-    while (nodeToInsertAfter.data != nodeValue) {
+    while (nodeToInsertAfter != null && nodeToInsertAfter.data != nodeValue) {
       nodeToInsertAfter = nodeToInsertAfter.next;
     }
     if (nodeToInsertAfter == null) {

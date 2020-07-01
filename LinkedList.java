@@ -9,24 +9,24 @@ class LinkedListNode {
 }
 
 class LinkedList {
-    static LinkedListNode head = null;
+    LinkedListNode head = null;
 
-    static void insertAtBegin(int data) {
+    void insertAtBegin(int data) {
         LinkedListNode node = new LinkedListNode(data);
-        if (head == null) {
-            head = node;
+        if (this.head == null) {
+            this.head = node;
         } else {
-            node.next = head;
-            head = node;
+            node.next = this.head;
+            this.head = node;
         }
     }
 
-    static void insertAtEnd(int data) {
+    void insertAtEnd(int data) {
         LinkedListNode node = new LinkedListNode(data);
-        if (head == null) {
-            head = node;
+        if (this.head == null) {
+            this.head = node;
         } else {
-            LinkedListNode temp = head;
+            LinkedListNode temp = this.head;
             while (temp.next != null) {
                 temp = temp.next;
             }
@@ -34,17 +34,28 @@ class LinkedList {
         }
     }
 
-    static void traverseList() {
-        LinkedListNode temp = head;
+    void traverseList() {
+        LinkedListNode temp = this.head;
         while (temp != null) {
-            System.out.print(temp.data + "\t");
+            System.out.print(temp.data);
+            if (temp.next != null) {
+                System.out.print(" -> ");
+            }
             temp = temp.next;
         }
     }
 
-    static void insertAfterNode(int nodeValue, int data) {
-        LinkedListNode nodeToInsertAfter = head;
-        while (nodeToInsertAfter.data != nodeValue) {
+    boolean search(int data) {
+        LinkedListNode temp = this.head;
+        while (temp != null && temp.data != data) {
+            temp = temp.next;
+        }
+        return temp == null ? false : true;
+    }
+
+    void insertAfterNode(int nodeValue, int data) {
+        LinkedListNode nodeToInsertAfter = this.head;
+        while (nodeToInsertAfter != null && nodeToInsertAfter.data != nodeValue) {
             nodeToInsertAfter = nodeToInsertAfter.next;
         }
         if (nodeToInsertAfter == null) {
@@ -56,20 +67,20 @@ class LinkedList {
         nodeToInsertAfter.next = nodeToInsert;
     }
 
-    static void deleteFirstNode() {
-        if (head == null) {
+    void deleteFirstNode() {
+        if (this.head == null) {
             return;
         }
-        head = head.next;
+        this.head = this.head.next;
     }
 
-    static void deleteLastNode() {
-        if (head == null) {
+    void deleteLastNode() {
+        if (this.head == null) {
             return;
-        } else if (head.next == null) {
-            head = null;
+        } else if (this.head.next == null) {
+            this.head = null;
         } else {
-            LinkedListNode temp = head, prev = head;
+            LinkedListNode temp = this.head, prev = this.head;
             while (temp.next != null) {
                 prev = temp;
                 temp = temp.next;
@@ -78,8 +89,11 @@ class LinkedList {
         }
     }
 
-    static void deleteNode(int data) {
-        LinkedListNode temp = head, prev = head;
+    void deleteNode(int data) {
+        if (data == this.head.data) {
+            deleteFirstNode();
+        }
+        LinkedListNode temp = this.head, prev = this.head;
         while (temp != null && temp.data != data) {
             prev = temp;
             temp = temp.next;
@@ -91,26 +105,27 @@ class LinkedList {
     }
 
     public static void main(String args[]) {
-        insertAtBegin(2);
-        insertAtEnd(3);
-        insertAtEnd(6);
-        insertAtBegin(1);
+        LinkedList list = new LinkedList();
+        list.insertAtBegin(2);
+        list.insertAtEnd(3);
+        list.insertAtEnd(6);
+        list.insertAtBegin(1);
         System.out.println("\nInitial List:");
-        traverseList();
-        insertAfterNode(3, 4);
+        list.traverseList();
+        list.insertAfterNode(3, 4);
         System.out.println("\nInserting 4 after 3:");
-        traverseList();
+        list.traverseList();
         System.out.println("\nDeleting first node:");
-        deleteFirstNode();
-        traverseList();
+        list.deleteFirstNode();
+        list.traverseList();
         System.out.println("\nDeleting last node:");
-        deleteLastNode();
-        traverseList();
+        list.deleteLastNode();
+        list.traverseList();
         System.out.println("\nDeleting 3:");
-        deleteNode(3);
-        traverseList();
+        list.deleteNode(3);
+        list.traverseList();
         System.out.println("\nDeleting 1:");
-        deleteNode(1);
-        traverseList();
+        list.deleteNode(1);
+        list.traverseList();
     }
 }
