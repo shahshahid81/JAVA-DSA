@@ -2,10 +2,10 @@ import java.util.*;
 
 public class LinearProbing<Key, Value> {
   private static final int INIT_CAPACITY = 4;
-  private int n; // number of key-value pairs in the symbol table
-  private int m; // size of linear probing table
-  private Key[] keys; // the keys
-  private Value[] vals; // the values
+  private int n;
+  private int m;
+  private Key[] keys;
+  private Value[] vals;
 
   public LinearProbing() {
     this(INIT_CAPACITY);
@@ -85,20 +85,16 @@ public class LinearProbing<Key, Value> {
     if (!contains(key))
       return;
 
-    // find position i of key
     int i = hash(key);
     while (!key.equals(keys[i])) {
       i = (i + 1) % m;
     }
 
-    // delete key and associated value
     keys[i] = null;
     vals[i] = null;
 
-    // rehash all keys in same cluster
     i = (i + 1) % m;
     while (keys[i] != null) {
-      // delete keys[i] an vals[i] and reinsert
       Key keyToRehash = keys[i];
       Value valToRehash = vals[i];
       keys[i] = null;
@@ -110,7 +106,6 @@ public class LinearProbing<Key, Value> {
 
     n--;
 
-    // halves size of array if it's 12.5% full or less
     if (n > 0 && n <= m / 8)
       resize(m / 2);
 
