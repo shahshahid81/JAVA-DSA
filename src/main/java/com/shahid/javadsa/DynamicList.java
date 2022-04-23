@@ -40,10 +40,18 @@ public class DynamicList<T> {
         return element;
     }
 
+    public T get(int index) {
+        this.checkIfIndexIsValid(index, 0, this.lastIndex);
+        return this.list[index];
+    }
+
+    public void set(T value, int index) {
+        this.checkIfIndexIsValid(index, 0, this.lastIndex);
+        this.list[index] = value;
+    }
+
     public void insert(T value, int index) {
-        if(index < 0 || index > this.lastIndex + 1) {
-            throw new IllegalArgumentException("Index must be in the range 0-"+ this.lastIndex + 1);
-        }
+        this.checkIfIndexIsValid(index,0,this.lastIndex + 1);
         this.growArrayIfFull();
         for(int i = this.lastIndex; i >= index ;i--) {
             this.list[i + 1] = this.list[i];
@@ -53,9 +61,7 @@ public class DynamicList<T> {
     }
 
     public T remove(int index) {
-        if(index < 0 || index > this.lastIndex) {
-            throw new IllegalArgumentException("Index must be in the range 0-"+ this.lastIndex);
-        }
+        this.checkIfIndexIsValid(index,0,this.lastIndex);
         T element = this.list[index];
         for(int i = index; i <= this.lastIndex ;i++) {
             this.list[i] = this.list[i + 1];
@@ -71,6 +77,12 @@ public class DynamicList<T> {
 
     public int getCapacity() {
         return this.list.length;
+    }
+
+    private void checkIfIndexIsValid(int index, int start, int end) {
+        if(index < start || index > end) {
+            throw new IllegalArgumentException(String.format("Index must be in the range %s-%s",start, end));
+        }
     }
 
     private void growArrayIfFull() {

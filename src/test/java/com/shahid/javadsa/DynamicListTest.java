@@ -31,9 +31,10 @@ public class DynamicListTest {
     @ValueSource(ints = {-1,-10,0})
     @DisplayName("Should throw error if capacity is less than 1.")
     public void testPositiveCapacity(final int capacity) {
-        Assertions.assertThrows(IllegalArgumentException.class,() -> {
-            DynamicList<Integer> dynamicList = new DynamicList<>(capacity);
+        IllegalArgumentException negativeInitialCapacityException = Assertions.assertThrows(IllegalArgumentException.class,() -> {
+            new DynamicList<>(capacity);
         });
+        Assertions.assertEquals(negativeInitialCapacityException.getMessage(),"Initial Capacity must be greater than zero.");
     }
 
     @Test
@@ -146,16 +147,19 @@ public class DynamicListTest {
     @Test
     @DisplayName("Should throw error on incorrect insertion index")
     public void testIncorrectInsertionIndex(){
-        Assertions.assertThrows(IllegalArgumentException.class,() -> {
+        IllegalArgumentException lowIndexException = Assertions.assertThrows(IllegalArgumentException.class,() -> {
             DynamicList<Integer> dynamicList = new DynamicList<>(1);
             dynamicList.push(1);
             dynamicList.insert(0,-1);
         });
-        Assertions.assertThrows(IllegalArgumentException.class,() -> {
+        Assertions.assertEquals(lowIndexException.getMessage(),"Index must be in the range 0-1");
+
+        IllegalArgumentException highIndexException = Assertions.assertThrows(IllegalArgumentException.class,() -> {
             DynamicList<Integer> dynamicList = new DynamicList<>(1);
             dynamicList.push(1);
             dynamicList.insert(0,2);
         });
+        Assertions.assertEquals(highIndexException.getMessage(),"Index must be in the range 0-1");
     }
 
     @Test
@@ -187,5 +191,54 @@ public class DynamicListTest {
             dynamicList.push(1);
             dynamicList.remove(-1);
         });
+    }
+
+    @Test
+    @DisplayName("Should return element based on index or throw error if index is invalid")
+    public void testGetMethod(){
+        DynamicList<Integer> dynamicList = new DynamicList<>();
+        dynamicList.push(1);
+        dynamicList.push(2);
+        dynamicList.push(3);
+        dynamicList.push(4);
+        Assertions.assertEquals(dynamicList.get(0),1);
+        Assertions.assertEquals(dynamicList.get(1),2);
+        Assertions.assertEquals(dynamicList.get(2),3);
+        dynamicList.remove(2);
+        Assertions.assertEquals(dynamicList.get(2),4);
+
+        IllegalArgumentException lowIndexException = Assertions.assertThrows(IllegalArgumentException.class,() -> {
+            dynamicList.get(-1);
+        });
+        Assertions.assertEquals(lowIndexException.getMessage(), "Index must be in the range 0-2");
+
+        IllegalArgumentException highIndexException = Assertions.assertThrows(IllegalArgumentException.class,() -> {
+            dynamicList.get(-1);
+        });
+        Assertions.assertEquals(highIndexException.getMessage(), "Index must be in the range 0-2");
+    }
+
+    @Test
+    @DisplayName("Should set element based on index or throw error if index is invalid")
+    public void testSetMethod(){
+        DynamicList<Integer> dynamicList = new DynamicList<>();
+        dynamicList.push(1);
+        dynamicList.push(2);
+        dynamicList.set(10,0);
+        dynamicList.set(20,1);
+        Assertions.assertEquals(dynamicList.get(0),10);
+        Assertions.assertEquals(dynamicList.get(1),20);
+        Assertions.assertEquals(dynamicList.getSize(), 2);
+        Assertions.assertEquals(dynamicList.getCapacity(), 10);
+
+        IllegalArgumentException lowIndexException = Assertions.assertThrows(IllegalArgumentException.class,() -> {
+            dynamicList.set(10,2);
+        });
+        Assertions.assertEquals(lowIndexException.getMessage(), "Index must be in the range 0-1");
+
+        IllegalArgumentException highIndexException = Assertions.assertThrows(IllegalArgumentException.class,() -> {
+            dynamicList.set(10,-1);
+        });
+        Assertions.assertEquals(highIndexException.getMessage(), "Index must be in the range 0-1");
     }
 }
