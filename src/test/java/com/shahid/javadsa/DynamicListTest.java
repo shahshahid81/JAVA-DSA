@@ -60,6 +60,21 @@ public class DynamicListTest {
     }
 
     @Test
+    @DisplayName("Should push the element in the list.")
+    public void testIfPushAddsElement() {
+        DynamicList<Integer> dynamicList = new DynamicList<>(2);
+        dynamicList.push(1);
+        dynamicList.push(2);
+        dynamicList.push(3);
+        Assertions.assertEquals(dynamicList.getSize(), 3);
+        Assertions.assertEquals(dynamicList.getCapacity(), 4);
+        dynamicList.pop();
+        dynamicList.pop();
+        dynamicList.pop();
+        dynamicList.push(1);
+    }
+
+    @Test
     @DisplayName("Should return the element removed.")
     public void testIfPopReturnsLastElement() {
         DynamicList<Integer> dynamicList = new DynamicList<>(2);
@@ -67,6 +82,11 @@ public class DynamicListTest {
         dynamicList.push(2);
         Assertions.assertEquals(dynamicList.pop(), 2);
         Assertions.assertEquals(dynamicList.pop(), 1);
+        Assertions.assertEquals(dynamicList.getSize(), 0);
+        Assertions.assertEquals(dynamicList.getCapacity(), 0);
+        Assertions.assertThrows(ArrayIndexOutOfBoundsException.class,() -> {
+            dynamicList.pop();
+        });
     }
 
     @Test
@@ -107,5 +127,65 @@ public class DynamicListTest {
         dynamicList.push(2);
         Assertions.assertEquals(dynamicList.getSize(),2);
         Assertions.assertEquals(dynamicList.getCapacity(),10);
+    }
+
+    @Test
+    @DisplayName("Should insert element at correct index")
+    public void testInsertionAtIndex(){
+        DynamicList<Integer> dynamicList = new DynamicList<>(1);
+        dynamicList.push(1);
+        dynamicList.push(3);
+        dynamicList.insert(0,0);
+        dynamicList.insert(2, 2);
+        dynamicList.print();
+        Assertions.assertEquals(outContent.toString().trim(), "[ 0, 1, 2, 3 ]");
+        Assertions.assertEquals(dynamicList.getSize(),4);
+        Assertions.assertEquals(dynamicList.getCapacity(),4);
+    }
+
+    @Test
+    @DisplayName("Should throw error on incorrect insertion index")
+    public void testIncorrectInsertionIndex(){
+        Assertions.assertThrows(IllegalArgumentException.class,() -> {
+            DynamicList<Integer> dynamicList = new DynamicList<>(1);
+            dynamicList.push(1);
+            dynamicList.insert(0,-1);
+        });
+        Assertions.assertThrows(IllegalArgumentException.class,() -> {
+            DynamicList<Integer> dynamicList = new DynamicList<>(1);
+            dynamicList.push(1);
+            dynamicList.insert(0,2);
+        });
+    }
+
+    @Test
+    @DisplayName("Should remove element at correct index")
+    public void testRemovalAtIndex(){
+        DynamicList<Integer> dynamicList = new DynamicList<>(1);
+        dynamicList.push(1);
+        dynamicList.push(2);
+        dynamicList.push(3);
+        dynamicList.push(5);
+        dynamicList.push(4);
+        dynamicList.remove(3);
+        dynamicList.print();
+        Assertions.assertEquals(outContent.toString().trim(), "[ 1, 2, 3, 4 ]");
+        Assertions.assertEquals(dynamicList.getSize(),4);
+        Assertions.assertEquals(dynamicList.getCapacity(),4);
+    }
+
+    @Test
+    @DisplayName("Should throw error on incorrect removal index")
+    public void testIncorrectRemovalIndex(){
+        Assertions.assertThrows(IllegalArgumentException.class,() -> {
+            DynamicList<Integer> dynamicList = new DynamicList<>(1);
+            dynamicList.push(1);
+            dynamicList.remove(1);
+        });
+        Assertions.assertThrows(IllegalArgumentException.class,() -> {
+            DynamicList<Integer> dynamicList = new DynamicList<>(1);
+            dynamicList.push(1);
+            dynamicList.remove(-1);
+        });
     }
 }

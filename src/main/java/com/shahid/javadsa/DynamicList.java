@@ -6,7 +6,7 @@ import java.util.StringJoiner;
 
 public class DynamicList<T> {
     private T[] list;
-    private int back = -1;
+    private int lastIndex = -1;
 
     DynamicList() {
         this.list = (T[]) new Object[10];
@@ -23,29 +23,62 @@ public class DynamicList<T> {
     public void print() {
         StringJoiner sj = new StringJoiner(", ","[ "," ]");
         Arrays.stream(this.list).filter(Objects::nonNull).map(String::valueOf).forEach(sj::add);
-        System.out.println(sj.toString());
+        System.out.println(sj);
     }
 
     public void push(T element) {
-        this.resizeArrayIfSizeEquals(this.getCapacity(), this.getCapacity() * 2);
-        this.list[++this.back] = element;
+        this.growArrayIfFull();
+        this.list[++this.lastIndex] = element;
     }
 
     public T pop() {
         if(this.getSize() == 0) {
             throw new ArrayIndexOutOfBoundsException("List is empty");
         }
-        T element = this.list[this.back--];
-        this.resizeArrayIfSizeEquals(this.getCapacity() / 2, this.getCapacity() / 2);
+        T element = this.list[this.lastIndex--];
+        this.shrinkArrayIfHalf();
+        return element;
+    }
+
+    public void insert(T value, int index) {
+        if(index < 0 || index > this.lastIndex + 1) {
+            throw new IllegalArgumentException("Index must be in the range 0-"+ this.lastIndex + 1);
+        }
+        this.growArrayIfFull();
+        for(int i = this.lastIndex; i >= index ;i--) {
+            this.list[i + 1] = this.list[i];
+        }
+        this.list[index] = value;
+        this.lastIndex++;
+    }
+
+    public T remove(int index) {
+        if(index < 0 || index > this.lastIndex) {
+            throw new IllegalArgumentException("Index must be in the range 0-"+ this.lastIndex);
+        }
+        T element = this.list[index];
+        for(int i = index; i <= this.lastIndex ;i++) {
+            this.list[i] = this.list[i + 1];
+        }
+        this.lastIndex--;
+        this.shrinkArrayIfHalf();
         return element;
     }
 
     public int getSize() {
-        return this.back + 1;
+        return this.lastIndex + 1;
     }
 
     public int getCapacity() {
         return this.list.length;
+    }
+
+    private void growArrayIfFull() {
+        this.resizeArrayIfSizeEquals(this.getCapacity(), this.getCapacity() == 0 ? 1 : this.getCapacity() * 2);
+    }
+
+    private void shrinkArrayIfHalf() {
+        this.resizeArrayIfSizeEquals(this.getCapacity() / 2, this.getCapacity() / 2);
     }
 
     private void resizeArrayIfSizeEquals(int capacityToCheck, int newCapacity) {
