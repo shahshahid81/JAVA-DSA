@@ -5,7 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Comparator;
 import java.util.Objects;
 
-public class Student implements Comparable {
+public class Student implements Comparable<Student> {
 
     static class StudentAgeComparator implements Comparator<Student> {
 
@@ -60,7 +60,8 @@ public class Student implements Comparable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Student student)) return false;
+        if (!(o instanceof Student)) return false;
+        Student student = (Student) o;
         return age == student.age && name.equals(student.name);
     }
 
@@ -78,15 +79,13 @@ public class Student implements Comparable {
     }
 
     @Override
-    public int compareTo(@NotNull Object o) {
-        Student other = (Student) o;
+    public int compareTo(@NotNull Student other) {
         if (this.age == other.age) {
             return this.name.compareTo(other.name);
         } else if (this.age > other.age) {
             return 1;
-        } else if (this.age < other.age) {
-            return -1;
         }
-        return 0;
+        return -1;
+
     }
 }

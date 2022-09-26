@@ -33,10 +33,6 @@ public class HashSetDemo extends SetDemo {
         printValues(hashSet);
 
         Set<Student> students = new HashSet<>();
-        Student johnWick = new Student("John Wick", 30);
-        Student sheldonCooper = new Student("Sheldon Cooper", 14);
-        Student harryPotter = new Student("Harry Potter", 30);
-
         students.add(johnWick);
         students.add(harryPotter);
         students.add(sheldonCooper);

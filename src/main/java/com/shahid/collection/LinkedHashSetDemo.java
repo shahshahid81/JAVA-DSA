@@ -1,6 +1,5 @@
 package com.shahid.collection;
 
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -30,9 +29,6 @@ public class LinkedHashSetDemo extends SetDemo {
         printValues(linkedHashSet);
 
         Set<Student> students = new LinkedHashSet<>();
-        Student johnWick = new Student("John Wick", 30);
-        Student sheldonCooper = new Student("Sheldon Cooper", 14);
-        Student harryPotter = new Student("Harry Potter", 30);
 
         students.add(johnWick);
         students.add(sheldonCooper);

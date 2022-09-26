@@ -1,11 +1,10 @@
 package com.shahid.collection;
 
-import java.util.Set;
 import java.util.TreeSet;
 
 public class TreeSetDemo extends SetDemo {
     public static void main(String[] args) {
-        Set<Integer> treeSet = new TreeSet<>();
+        TreeSet<Integer> treeSet = new TreeSet<>();
         treeSet.add(44);
         treeSet.add(6);
         treeSet.add(9);
@@ -13,14 +12,14 @@ public class TreeSetDemo extends SetDemo {
         treeSet.add(1);
         treeSet.add(3);
         treeSet.add(2);
-        treeSet.add(1);
-        treeSet.add(3);
 
         printValues(treeSet);
         System.out.println("Set is empty: " + treeSet.isEmpty());
         System.out.println("Size of set: " + treeSet.size());
         System.out.println("Set contains 1: " + treeSet.contains(1));
         System.out.println("Set contains 5: " + treeSet.contains(5));
+        System.out.println("Ceil of 5: " + treeSet.ceiling(5));
+        System.out.println("Floor of 5: " + treeSet.floor(5));
 
         printValues(treeSet);
 
@@ -31,12 +30,7 @@ public class TreeSetDemo extends SetDemo {
         System.out.println("Set is empty: " + treeSet.isEmpty());
         printValues(treeSet);
 
-        Student johnWick = new Student("John Wick", 30);
-        Student johnCena = new Student("John Cena", 30);
-        Student sheldonCooper = new Student("Sheldon Cooper", 14);
-        Student harryPotter = new Student("Harry Potter", 30);
-
-        Set<Student> students = new TreeSet<>();
+        TreeSet<Student> students = new TreeSet<>();
         students.add(johnWick);
         students.add(sheldonCooper);
         students.add(harryPotter);
@@ -46,7 +40,7 @@ public class TreeSetDemo extends SetDemo {
         System.out.println(students.contains(sheldonCooper));
         System.out.println(students.contains(new Student("John Wick", 30)));
 
-        Set<Student> nameSortedStudents = new TreeSet<>(new Student.StudentNameComparator());
+        TreeSet<Student> nameSortedStudents = new TreeSet<>(new Student.StudentNameComparator());
         nameSortedStudents.add(johnWick);
         nameSortedStudents.add(sheldonCooper);
         nameSortedStudents.add(harryPotter);
@@ -56,7 +50,7 @@ public class TreeSetDemo extends SetDemo {
         System.out.println(nameSortedStudents.contains(sheldonCooper));
         System.out.println(nameSortedStudents.contains(new Student("John Wick", 30)));
 
-        Set<Student> ageSortedStudents = new TreeSet<>(new Student.StudentAgeComparator());
+        TreeSet<Student> ageSortedStudents = new TreeSet<>(new Student.StudentAgeComparator());
         ageSortedStudents.add(johnWick);
         ageSortedStudents.add(sheldonCooper);
         ageSortedStudents.add(harryPotter);
@@ -65,5 +59,20 @@ public class TreeSetDemo extends SetDemo {
         printValues(ageSortedStudents);
         System.out.println(ageSortedStudents.contains(sheldonCooper));
         System.out.println(ageSortedStudents.contains(new Student("John Wick", 30)));
+
+        Student searchStudent = new Student("John",10);
+
+        System.out.println("Ceil of John by name: " + nameSortedStudents.ceiling(searchStudent));
+        System.out.println("Floor of John by name: " + nameSortedStudents.floor(searchStudent));
+        System.out.println("Higher of John by name: " + nameSortedStudents.higher(searchStudent));
+        System.out.println("Lower of John by name: " + nameSortedStudents.lower(searchStudent));
+
+        System.out.println();
+        System.out.println("Youngest Student: " + ageSortedStudents.first().getName());
+        System.out.println("Oldest Student: " + ageSortedStudents.last().getName());
+        System.out.println("Ceil of John by age: " + ageSortedStudents.ceiling(searchStudent));
+        System.out.println("Floor of John by age: " + ageSortedStudents.floor(searchStudent));
+        System.out.println("Higher of John by age: " + ageSortedStudents.higher(searchStudent));
+        System.out.println("Lower of John by age: " + ageSortedStudents.lower(searchStudent));
     }
 }
