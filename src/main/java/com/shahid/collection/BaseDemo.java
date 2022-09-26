@@ -7,9 +7,9 @@ public class BaseDemo {
     final static Student harryPotter;
 
     static {
-        johnWick = new Student("John Wick", 30);
+        johnWick = new Student("John Wick", 29);
         sheldonCooper = new Student("Sheldon Cooper", 14);
-        harryPotter = new Student("Harry Potter", 30);
+        harryPotter = new Student("Harry Potter", 16);
         johnCena = new Student("John Cena", 30);
     }
 }
