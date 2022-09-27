@@ -47,12 +47,57 @@ public class LinkedList<T> implements Iterable<T> {
     }
 
     @Nullable
-    private LinkedListNode head = null;
+    private LinkedListNode head;
 
-    public void add(T value) {
+    @Nullable
+    private LinkedListNode tail;
+
+    private int size = 0;
+
+    public void addFirst(T value) {
         LinkedListNode node = new LinkedListNode(value);
         node.next = head;
         head = node;
+        if (tail == null) {
+            tail = node;
+        }
+        this.size++;
+    }
+
+    public void addLast(T value) {
+        LinkedListNode node = new LinkedListNode(value);
+        if (head == null && tail == null) {
+            head = tail = node;
+        } else {
+            tail.next = node;
+            tail = node;
+        }
+        this.size++;
+    }
+
+    public void add(T value, int index) {
+        if (index == 0) {
+            this.addFirst(value);
+        } else if (index == this.size) {
+            this.addLast(value);
+        } else {
+            LinkedListNode node = new LinkedListNode(value);
+            LinkedListNode current = head;
+            int insertionIndex = 0;
+            while (insertionIndex++ != index - 1) {
+                current = current.next;
+            }
+            node.next = current.next;
+            current.next = node;
+            this.size++;
+        }
+    }
+
+    public boolean contains(T value) {
+        for (T t : this) {
+            if (t.equals(value)) return true;
+        }
+        return false;
     }
 
     public void print() {
