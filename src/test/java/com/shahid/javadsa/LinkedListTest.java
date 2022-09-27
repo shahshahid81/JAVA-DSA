@@ -74,6 +74,56 @@ public class LinkedListTest<I extends Number> {
     }
 
     @Test
+    @DisplayName("Should remove element at beginning of the list.")
+    public void testIfAddRemovesElementAtBeginning() {
+        LinkedList<Integer> linkedList = new LinkedList<>();
+        linkedList.addFirst(1);
+        linkedList.addFirst(2);
+        linkedList.addFirst(3);
+        LinkedList<Integer>.LinkedListNode first = linkedList.removeFirst();
+        linkedList.print();
+        Assertions.assertEquals(outContent.toString().trim(), "[ 2, 1 ]");
+        Assertions.assertEquals(first.value, 3);
+    }
+
+    @Test
+    @DisplayName("Should remove element at end of the list.")
+    public void testIfAddRemovesElementAtEnd() {
+        LinkedList<Integer> linkedList = new LinkedList<>();
+        linkedList.addFirst(1);
+        linkedList.addFirst(2);
+        linkedList.addFirst(3);
+        LinkedList<Integer>.LinkedListNode last = linkedList.removeLast();
+        linkedList.print();
+        Assertions.assertEquals(outContent.toString().trim(), "[ 3, 2 ]");
+        Assertions.assertEquals(last.value, 1);
+    }
+
+    @Test
+    @DisplayName("Should remove element at index.")
+    public void testIfAddRemovesElementAtIndex() {
+        LinkedList<Integer> linkedList = new LinkedList<>();
+        linkedList.addFirst(1);
+        linkedList.addFirst(2);
+        linkedList.addFirst(3);
+        linkedList.add(8, 1);
+        LinkedList<Integer>.LinkedListNode first = linkedList.remove(1);
+        LinkedList<Integer>.LinkedListNode last = linkedList.remove(3);
+        LinkedList<Integer>.LinkedListNode empty = linkedList.remove(5);
+        LinkedList<Integer>.LinkedListNode second = linkedList.remove(2);
+        linkedList.print();
+        Assertions.assertNotNull(first);
+        Assertions.assertEquals(first.value, 1);
+        Assertions.assertNotNull(second);
+        Assertions.assertEquals(second.value, 2);
+        Assertions.assertNotNull(last);
+        Assertions.assertEquals(last.value, 3);
+        Assertions.assertNull(empty);
+        Assertions.assertEquals(outContent.toString().trim(), "[ 8 ]");
+
+    }
+
+    @Test
     @DisplayName("Should return true if element is found else false.")
     public void testSearch() {
         LinkedList<Integer> linkedList = new LinkedList<>();

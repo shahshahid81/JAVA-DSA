@@ -37,7 +37,7 @@ public class LinkedList<T> implements Iterable<T> {
         }
     }
 
-    private class LinkedListNode {
+    public class LinkedListNode {
         T value;
         @Nullable LinkedListNode next = null;
 
@@ -78,19 +78,82 @@ public class LinkedList<T> implements Iterable<T> {
     public void add(T value, int index) {
         if (index == 0) {
             this.addFirst(value);
-        } else if (index == this.size) {
-            this.addLast(value);
-        } else {
-            LinkedListNode node = new LinkedListNode(value);
-            LinkedListNode current = head;
-            int insertionIndex = 0;
-            while (insertionIndex++ != index - 1) {
-                current = current.next;
-            }
-            node.next = current.next;
-            current.next = node;
-            this.size++;
+            return;
         }
+
+        if (index == this.size) {
+            this.addLast(value);
+            return;
+        }
+
+        LinkedListNode node = new LinkedListNode(value);
+        LinkedListNode current = head;
+        int insertionIndex = 0;
+        while (insertionIndex++ != index - 1) {
+            current = current.next;
+        }
+        node.next = current.next;
+        current.next = node;
+        this.size++;
+
+    }
+
+    public LinkedListNode removeFirst() {
+        if (head == null) {
+            return null;
+        }
+
+        if (head == tail) {
+            head = tail = null;
+            this.size--;
+            return null;
+        }
+
+        LinkedListNode current = head;
+        head = head.next;
+        this.size--;
+        return current;
+    }
+
+    public LinkedListNode removeLast() {
+        if (head == null) {
+            return null;
+        }
+
+        if (head == tail) {
+            head = tail = null;
+            this.size--;
+            return null;
+        }
+
+
+        LinkedListNode elementToRemove = tail;
+        LinkedListNode current = head;
+        while (current.next != tail) current = current.next;
+        tail = current;
+        tail.next = null;
+        this.size--;
+        return elementToRemove;
+    }
+
+    public LinkedListNode remove(T value) {
+        if (head == null || tail == null) return null;
+
+        if (head.value.equals(value)) {
+            return this.removeFirst();
+        } else if (tail.value.equals(value)) {
+            return this.removeLast();
+        }
+
+        LinkedListNode current = head;
+        while (current.next != null && !current.next.value.equals(value)) current = current.next;
+        LinkedListNode elementToRemove = current.next;
+        if (elementToRemove != null) {
+            current.next = elementToRemove.next;
+            this.size--;
+        }
+
+        return elementToRemove;
     }
 
     public boolean contains(T value) {
