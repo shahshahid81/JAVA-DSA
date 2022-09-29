@@ -148,15 +148,4 @@ public class BinaryTree<T> {
 
     System.out.println(sj);
   }
-
-  public static void main(String[] args) {
-    BinaryTree<Integer> binaryTree = new BinaryTree<>();
-    for (int i : new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13}) {
-      binaryTree.insert(i);
-    }
-    binaryTree.remove(1);
-    binaryTree.remove(4);
-    binaryTree.remove(11);
-    binaryTree.print();
-  }
 }
