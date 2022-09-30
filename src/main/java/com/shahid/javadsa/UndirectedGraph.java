@@ -1,9 +1,7 @@
 package com.shahid.javadsa;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class UndirectedGraph<T extends Comparable<T>> {
 
@@ -95,6 +93,31 @@ public class UndirectedGraph<T extends Comparable<T>> {
     }
   }
 
+  public void bfs() {
+    if (vertices.isEmpty()) return;
+
+    Queue<Node> queue = new LinkedList<>();
+    Set<Node> visited = new HashSet<>();
+
+    for (Node vertex : vertices) {
+      if (!visited.contains(vertex)) {
+        queue.offer(vertex);
+        visited.add(vertex);
+      }
+
+      if (!queue.isEmpty()) {
+        Node current = queue.poll();
+        System.out.print(current + "\t");
+        for (Node element : current.list) {
+          if (!visited.contains(element)) {
+            queue.offer(element);
+            visited.add(element);
+          }
+        }
+      }
+    }
+  }
+
   public static void main(String[] args) {
     UndirectedGraph<Character> graph = new UndirectedGraph<>();
     graph.insertEdge('A', 'B');
@@ -108,6 +131,8 @@ public class UndirectedGraph<T extends Comparable<T>> {
     graph.removeEdge('G', 'I');
     graph.removeVertex('A');
     graph.print();
+    System.out.println();
+    graph.bfs();
   }
 
 }
