@@ -3,7 +3,6 @@ package com.shahid.javadsa;
 import org.junit.jupiter.api.*;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.PrintStream;
 
 @DisplayName("Binary Tree Test")
