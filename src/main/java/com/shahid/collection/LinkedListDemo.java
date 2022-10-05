@@ -15,7 +15,7 @@ public class LinkedListDemo extends ListDemo {
         linkedList.add(2, 3);
         printValues(linkedList);
 
-        linkedList.remove(new Integer(1));
+        linkedList.remove(Integer.valueOf(1));
         printValues(linkedList);
 
         linkedList.remove(1);
@@ -29,7 +29,7 @@ public class LinkedListDemo extends ListDemo {
         System.out.println("Last index of 2 is " + linkedList.lastIndexOf(2));
         System.out.println("List has 2: " + linkedList.contains(2));
         System.out.println("List has 3: " + linkedList.contains(3));
-        linkedList.sort((number1, number2) -> number1 == number2 ? 0 : number1 > number2 ? 1 : -1);
+        linkedList.sort(Integer::compareTo);
         printValues(linkedList);
 
         LinkedList<Student> students = new LinkedList<>();
@@ -44,9 +44,7 @@ public class LinkedListDemo extends ListDemo {
 
         students.sort(new Student.StudentAgeComparator());
         printValues(students);
-        Collections.sort(students, new Student.StudentAgeComparator());
-        printValues(students);
-        Student[] studentsArray = students.toArray(new Student[students.size()]);
+        Student[] studentsArray = students.toArray(new Student[0]);
         for(Student student: studentsArray) {
             System.out.println(student);
         }
