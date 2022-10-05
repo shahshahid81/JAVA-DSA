@@ -1,6 +1,5 @@
 package com.shahid.collection;
 
-import java.util.Collections;
 import java.util.LinkedList;
 
 public class LinkedListDemo extends ListDemo {
