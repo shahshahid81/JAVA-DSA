@@ -1,6 +1,6 @@
 package com.shahid.collection;
 
-public class BaseDemo {
+public abstract class BaseDemo {
     final static Student johnWick;
     final static Student sheldonCooper;
     final static Student johnCena;

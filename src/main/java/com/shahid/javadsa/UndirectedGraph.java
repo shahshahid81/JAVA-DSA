@@ -118,21 +118,4 @@ public class UndirectedGraph<T extends Comparable<T>> {
     }
   }
 
-  public static void main(String[] args) {
-    UndirectedGraph<Character> graph = new UndirectedGraph<>();
-    graph.insertEdge('A', 'B');
-    graph.insertEdge('A', 'D');
-    graph.insertEdge('B', 'C');
-    graph.insertEdge('C', 'E');
-    graph.insertVertex('F');
-    graph.insertVertex('G');
-    graph.insertVertex('H');
-    graph.insertEdge('G', 'I');
-    graph.removeEdge('G', 'I');
-    graph.removeVertex('A');
-    graph.print();
-    System.out.println();
-    graph.bfs();
-  }
-
 }
