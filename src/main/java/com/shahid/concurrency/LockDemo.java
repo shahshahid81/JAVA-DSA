@@ -10,26 +10,36 @@ public class LockDemo {
 
     LinkedList<Integer> queue = new LinkedList<>();
     ReentrantLock reentrantLock = new ReentrantLock();
-    Condition dataProduced = reentrantLock.newCondition();
+    Condition production = reentrantLock.newCondition();
+    Condition consumption = reentrantLock.newCondition();
 
-    Thread producerThread = new Thread(new Producer(queue, reentrantLock, dataProduced));
+    Thread producerThread = new Thread(new Producer(queue, reentrantLock, production, consumption));
     producerThread.setName("Producer");
 
-    Thread consumerThreadOne = new Thread(new Consumer(queue, reentrantLock, dataProduced));
+    Thread consumerThreadOne = new Thread(new Consumer(queue, reentrantLock, production, consumption));
     consumerThreadOne.setName("Consumer One");
 
-    Thread consumerThreadTwo = new Thread(new Consumer(queue, reentrantLock, dataProduced));
+    Thread consumerThreadTwo = new Thread(new Consumer(queue, reentrantLock, production, consumption));
     consumerThreadTwo.setName("Consumer Two");
+
+    Thread consumerThreadThree = new Thread(new Consumer(queue, reentrantLock, production, consumption));
+    consumerThreadThree.setName("Consumer Three");
+
+    Thread consumerThreadFour = new Thread(new Consumer(queue, reentrantLock, production, consumption));
+    consumerThreadFour.setName("Consumer Four");
 
     producerThread.start();
     consumerThreadOne.start();
     consumerThreadTwo.start();
-
+    consumerThreadThree.start();
+    consumerThreadFour.start();
 
     try {
       producerThread.join();
       consumerThreadOne.join();
       consumerThreadTwo.join();
+      consumerThreadThree.join();
+      consumerThreadFour.join();
       System.out.println("Completed");
     } catch (InterruptedException e) {
       throw new RuntimeException(e);
@@ -40,12 +50,14 @@ public class LockDemo {
 
     LinkedList<Integer> queue;
     ReentrantLock reentrantLock;
-    Condition dataProduced;
+    Condition production;
+    Condition consumption;
 
-    public Producer(LinkedList<Integer> queue, ReentrantLock reentrantLock, Condition dataProduced) {
+    public Producer(LinkedList<Integer> queue, ReentrantLock reentrantLock, Condition production, Condition consumption) {
       this.queue = queue;
       this.reentrantLock = reentrantLock;
-      this.dataProduced = dataProduced;
+      this.production = production;
+      this.consumption = consumption;
     }
 
     @Override
@@ -56,12 +68,16 @@ public class LockDemo {
         for (int i = 1000; i <= limit; i = i + 10) {
           for (int j = 0; j < 10; j++) {
             System.out.println("Produced: " + (i + j));
-            queue.offer((i + j));
+            queue.offer(i + j);
           }
-          dataProduced.signalAll();
-          if(i == limit) break;
-          dataProduced.await();
+          production.signalAll();
+          consumption.await();
         }
+        while (!queue.isEmpty()) {
+          production.signalAll();
+          consumption.await();
+        }
+        production.signalAll();
       } catch (InterruptedException e) {
         throw new RuntimeException(e);
       } finally {
@@ -74,12 +90,14 @@ public class LockDemo {
   private static class Consumer implements Runnable {
     LinkedList<Integer> queue;
     ReentrantLock reentrantLock;
-    Condition dataProduced;
+    Condition production;
+    Condition consumption;
 
-    public Consumer(LinkedList<Integer> queue, ReentrantLock reentrantLock, Condition dataProduced) {
+    public Consumer(LinkedList<Integer> queue, ReentrantLock reentrantLock, Condition production, Condition consumption) {
       this.queue = queue;
       this.reentrantLock = reentrantLock;
-      this.dataProduced = dataProduced;
+      this.production = production;
+      this.consumption = consumption;
     }
 
     static BigInteger factorial(BigInteger n) {
@@ -99,8 +117,10 @@ public class LockDemo {
           BigInteger factorial = factorial(BigInteger.valueOf(consumedValue));
           System.out.println(threadName + " Consumed: " + consumedValue);
           System.out.println(threadName + " generated factorial of " + consumedValue + " is " + factorial);
-          dataProduced.signalAll();
-          if(!queue.isEmpty()) dataProduced.await();
+          consumption.signalAll();
+          if (!queue.isEmpty()) {
+            production.await();
+          }
         }
       } catch (InterruptedException e) {
         throw new RuntimeException(e);
