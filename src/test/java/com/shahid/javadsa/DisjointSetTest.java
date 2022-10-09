@@ -45,11 +45,11 @@ public class DisjointSetTest {
     disjointSet.union('C', 'D');
     disjointSet.union('E', 'A');
     disjointSet.union('E', 'C');
-    Assertions.assertEquals(disjointSet.find('A'), 'E');
-    Assertions.assertEquals(disjointSet.find('C'), 'E');
-    Assertions.assertEquals(disjointSet.find('B'), 'E');
+    Assertions.assertEquals(disjointSet.find('A'), 'A');
+    Assertions.assertEquals(disjointSet.find('C'), 'A');
+    Assertions.assertEquals(disjointSet.find('B'), 'A');
     disjointSet.union('H', 'E');
-    Assertions.assertEquals(disjointSet.find('B'), 'H');
-    Assertions.assertEquals(disjointSet.find('G'), 'G');
+    Assertions.assertEquals(disjointSet.find('B'), 'A');
+    Assertions.assertEquals(disjointSet.find('D'), 'A');
   }
 }
